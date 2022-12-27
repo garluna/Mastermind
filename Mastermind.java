@@ -1,9 +1,11 @@
+import java.util.Hashtable;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Mastermind {
 
     public static String answer;
+    public static Hashtable<Character, Integer> answerCount;
     
     public static void main(String[] args) {
         intro();
@@ -25,11 +27,13 @@ public class Mastermind {
 
     private static void setAnswerSequence() {
         answer = "";
+        answerCount = new Hashtable<>();
         char[] colors = {'R', 'G', 'B', 'Y', 'O', 'P'};
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
             int x = random.nextInt(6);
             answer += colors[x];
+            answerCount.put(colors[x], answerCount.getOrDefault(colors[x], 0) + 1);
         }
     }
 
@@ -49,14 +53,52 @@ public class Mastermind {
                 return;
             } else {
                 // Tell how many are correct
+                checkAnswerCloseness(guess);
             }
         }
         scanner.close();
 
         
-        // Show lose if cant guess in 10 guesses
+        // Show lose if can't guess in 10 guesses
         System.out.println("You're out of guesses. The correct answer was " + answer);
         System.out.println("Better luck next time!"); 
+    }
+
+    private static void checkAnswerCloseness(String guess) {
+        System.out.println("Placeholder " + answer);
+        Hashtable<Character, Integer> guessCount = new Hashtable<>();
+        int correctCharacterCorrectPlace = 0;
+        int correctCharacterWrongPlace = 0;
+
+        for (int i = 0; i < guess.length(); i++) {
+            Character c = guess.charAt(i);
+            if (c == answer.charAt(i)) {
+                correctCharacterCorrectPlace++;
+            }
+            guessCount.put(c, guessCount.getOrDefault(c, 0) + 1);
+        }
+
+        for (int i = 0; i < answer.length(); i++) {
+            Character c = answer.charAt(i);
+            int countInAnswer = answerCount.get(c);
+            int countInGuess = guessCount.getOrDefault(c, 0);
+
+            if (countInGuess == 0 || countInAnswer == 0) {
+                continue;
+            }
+
+            if (countInGuess > countInAnswer) {
+                correctCharacterWrongPlace += countInAnswer;
+            } else {
+                correctCharacterWrongPlace += countInGuess;
+            }
+
+            guessCount.remove(c);
+        }
+        correctCharacterWrongPlace -= correctCharacterCorrectPlace;
+
+        System.out.println("Number of colors in correct place: " + correctCharacterCorrectPlace);
+        System.out.println("Number of colors in wrong place: " + correctCharacterWrongPlace);
     }
 
 }
