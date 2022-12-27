@@ -1,11 +1,17 @@
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.Set;
 
 public class Mastermind {
 
+    public static final Character[] colors = {'R', 'G', 'B', 'Y', 'O', 'P'}; 
+
     public static String answer;
     public static Hashtable<Character, Integer> answerCount;
+    public static Set<Character> allowedCharacters;
     
     public static void main(String[] args) {
         intro();
@@ -28,7 +34,6 @@ public class Mastermind {
     private static void setAnswerSequence() {
         answer = "";
         answerCount = new Hashtable<>();
-        char[] colors = {'R', 'G', 'B', 'Y', 'O', 'P'};
         Random random = new Random();
         for (int i = 0; i < 6; i++) {
             int x = random.nextInt(6);
@@ -45,6 +50,12 @@ public class Mastermind {
         for (int i = 0; i < 10; i++) {
             System.out.println("Enter guess #" + (i + 1));
             String guess = scanner.nextLine();
+            guess = guess.toUpperCase();
+
+            if (invalidInput(guess)) {
+                i--;
+                continue;
+            }
 
             if (guess.equals(answer)) {
                 // Show win when correct guess occurs
@@ -64,8 +75,27 @@ public class Mastermind {
         System.out.println("Better luck next time!"); 
     }
 
+    private static boolean invalidInput(String guess) {
+        if (guess.length() != 6) {
+            System.out.println("You've entered an invalid guess. Guesses must be 6 letters long");
+            return true;
+        }
+
+        if (allowedCharacters == null) {
+            allowedCharacters = new HashSet<Character>(Arrays.asList(colors));
+        }
+
+        for (int i = 0; i < guess.length(); i++) {
+            if (!allowedCharacters.contains(guess.charAt(i))) {
+                System.out.println("You've entered an invalid guess. Guesses can only consist of characters R, G, B, Y, O, or P.");
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private static void checkAnswerCloseness(String guess) {
-        System.out.println("Placeholder " + answer);
         Hashtable<Character, Integer> guessCount = new Hashtable<>();
         int correctCharacterCorrectPlace = 0;
         int correctCharacterWrongPlace = 0;
