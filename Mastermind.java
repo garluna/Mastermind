@@ -7,18 +7,24 @@ import java.util.Set;
 
 public class Mastermind {
 
-    public static final int answerLength = 4;
     public static final Character[] colors = {'R', 'G', 'B', 'Y', 'O', 'P'}; 
 
+    public static int answerLength = 0;
+
+    public static Scanner scanner;
     public static String answer;
     public static Hashtable<Character, Integer> answerCount;
     public static Set<Character> allowedCharacters;
     
     public static void main(String[] args) {
+        scanner = new Scanner(System.in);
+
         intro();
 
         // Take guesses from user
         playRound();
+
+        scanner.close();
     }
 
     private static void intro() {
@@ -26,8 +32,23 @@ public class Mastermind {
         System.out.println("***   Welcome to Mastermind!   ***");
         System.out.println("**********************************");
         System.out.println("Mastermind is a strategy game in which you will be able to play against the computer.");
-        System.out.println("For each round a set of " + answerLength + " letters must be guessed consisting of R, B, G, Y, O, or P.");
-        System.out.println("After each guess, you will be told how many colors are in the correct place and how many colors are in incorrect places.");
+
+        // Answer length
+        System.out.println("For each round a set of letters must be guessed consisting of R, B, G, Y, O, or P.");
+        System.out.println("You can guess between 1 to 10 letters.");
+        while (answerLength < 1 || answerLength > 10) {
+            System.out.println("How many letters would you like to guess each time?");
+            String length = scanner.nextLine();
+            int lengthNum = Integer.valueOf(length);
+            if (lengthNum > 0 && lengthNum < 11) {
+                answerLength = lengthNum;
+            } else {
+                System.out.println("Invalid length. The length must be between 1 to 10.");
+            }
+        }
+        System.out.println("The length has been set to " + answerLength);
+
+        System.out.println("After each guess, you will be told how many letters are in the correct place and how many letters are in incorrect places.");
         System.out.println("You will have 10 chances to guess the correct answer.");
         System.out.println("Good luck!");
     }
@@ -47,7 +68,6 @@ public class Mastermind {
         // Create computer random answer
         setAnswerSequence();
 
-        Scanner scanner = new Scanner(System.in);
         for (int i = 0; i < 10; i++) {
             System.out.println("Enter guess #" + (i + 1));
             String guess = scanner.nextLine();
@@ -61,14 +81,12 @@ public class Mastermind {
             if (guess.equals(answer)) {
                 // Show win when correct guess occurs
                 System.out.println("Congrats! You guessed the answer - good job!");
-                scanner.close();
                 return;
             } else {
                 // Tell how many are correct
                 checkAnswerCloseness(guess);
             }
         }
-        scanner.close();
 
         
         // Show lose if can't guess in 10 guesses
