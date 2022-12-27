@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class Mastermind {
 
+    public static final int answerLength = 4;
     public static final Character[] colors = {'R', 'G', 'B', 'Y', 'O', 'P'}; 
 
     public static String answer;
@@ -25,7 +26,7 @@ public class Mastermind {
         System.out.println("***   Welcome to Mastermind!   ***");
         System.out.println("**********************************");
         System.out.println("Mastermind is a strategy game in which you will be able to play against the computer.");
-        System.out.println("For each round a set of letters must be guessed consisting of R, B, G, Y, O, or P.");
+        System.out.println("For each round a set of " + answerLength + " letters must be guessed consisting of R, B, G, Y, O, or P.");
         System.out.println("After each guess, you will be told how many colors are in the correct place and how many colors are in incorrect places.");
         System.out.println("You will have 10 chances to guess the correct answer.");
         System.out.println("Good luck!");
@@ -35,8 +36,8 @@ public class Mastermind {
         answer = "";
         answerCount = new Hashtable<>();
         Random random = new Random();
-        for (int i = 0; i < 6; i++) {
-            int x = random.nextInt(6);
+        for (int i = 0; i < answerLength; i++) {
+            int x = random.nextInt(colors.length);
             answer += colors[x];
             answerCount.put(colors[x], answerCount.getOrDefault(colors[x], 0) + 1);
         }
@@ -76,8 +77,8 @@ public class Mastermind {
     }
 
     private static boolean invalidInput(String guess) {
-        if (guess.length() != 6) {
-            System.out.println("You've entered an invalid guess. Guesses must be 6 letters long");
+        if (guess.length() != answerLength) {
+            System.out.println("You've entered an invalid guess. Guesses must be "+ answerLength + " letters long");
             return true;
         }
 
