@@ -36,6 +36,7 @@ public class Mastermind {
         System.out.println("***   Welcome to Mastermind!   ***");
         System.out.println("**********************************");
         System.out.println("Mastermind is a strategy game in which you will be able to play against the computer.");
+        System.out.println("");
 
         // Answer length
         System.out.println("For each round a set of characters must be guessed.");
@@ -57,6 +58,7 @@ public class Mastermind {
             }
         }
         System.out.println("The length has been set to " + answerLength);
+        System.out.println("");
 
         System.out.println("The default set of characters consists of " + printCharacterSet() + " representing the colors of the original Mastermind game.");
         System.out.println("Would you like to change the set of characters? Enter Y or N");
@@ -78,8 +80,9 @@ public class Mastermind {
             updateCharacterSet(set.toUpperCase());
         }
         System.out.println("The characters have been set to " + printCharacterSet());
+        System.out.println("");
 
-        System.out.println("After each guess, you will be told how many characters are in the correct place and how many characters are in incorrect places.");
+        System.out.println("After each guess, you will be told how many characters are in the correct place and how many characters are in the wrong place.");
 
         while (numberOfGuesses < 1 || numberOfGuesses > 20) {
             System.out.println("How many times would you like to be able to guess? Enter a number between 1 and 20.");
@@ -97,23 +100,29 @@ public class Mastermind {
                 System.out.println("Invalid length. The number must be between 1 and 20.");
             }
         }
-        System.out.println("You will have " + numberOfGuesses + " chances to guess the correct answer.");
+        String chance = "chances";
+        if (numberOfGuesses == 1) {
+            chance = "chance";
+        }
+        System.out.println("You will have " + numberOfGuesses + " " + chance + " to guess the correct answer.");
+        System.out.println("");
+
         System.out.println("Good luck!");
+        System.out.println("");
     }
 
     private static void updateCharacterSet(String requestedChars) {
         characters = new Character[requestedChars.length()];
-        characterLength = requestedChars.length();
+        characterLength = 0;
         if (allowedCharacters != null) {
             allowedCharacters.clear();
         } else {
             allowedCharacters = new HashSet<Character>(Arrays.asList(characters));
         }
         for (int i = 0; i < requestedChars.length(); i++) {
-            if (allowedCharacters.contains(requestedChars.charAt(i))) {
-                characterLength--;
-            } else {
-                characters[i] = requestedChars.charAt(i);
+            if (!allowedCharacters.contains(requestedChars.charAt(i))) {
+                characters[characterLength] = requestedChars.charAt(i);
+                characterLength++;
                 allowedCharacters.add(requestedChars.charAt(i));
             }
         }
@@ -146,7 +155,9 @@ public class Mastermind {
 
             if (guess.equals(answer)) {
                 // Show win when correct guess occurs
-                System.out.println("Congrats! You guessed the answer - good job!");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+                System.out.println("~~ Congrats! You guessed the answer - good job! ~~");
+                System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
                 return;
             } else {
                 // Tell how many are correct
@@ -156,8 +167,11 @@ public class Mastermind {
 
         
         // Show lost is can't guess in number of guesses
-        System.out.println("You're out of guesses. The correct answer was " + answer);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("You're out of guesses.");
+        System.out.println("The correct answer was " + answer);
         System.out.println("Better luck next time!"); 
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
     }
 
     private static boolean invalidInput(String guess) {
@@ -214,6 +228,7 @@ public class Mastermind {
 
         System.out.println("Number of characters in correct place: " + correctCharacterCorrectPlace);
         System.out.println("Number of characters in wrong place: " + correctCharacterWrongPlace);
+        System.out.println("---------------------------------------------");
     }
 
     private static String printCharacterSet() {
